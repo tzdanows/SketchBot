@@ -14,7 +14,7 @@ bot.on('message', msg => {
   if (msg.content.startsWith('!sketch')) {
     var args = (msg.content.trim().split(/ +/g)).slice(0);
     args.shift();
-    console.log(args);
+    draw(args[0], args[1]);
     msg.channel.send('Heres the current sketch:', {
       files:[
         "resources/templateNew.png"
@@ -22,6 +22,12 @@ bot.on('message', msg => {
     });
   } 
 });
+
+function draw(index, color){
+  const letter = index[0].toUpperCase();
+  const number = index.substring(1);
+  
+}
 
 Jimp.read('resources/templateNew.png', (err, template) => {
   if (err) throw err;
