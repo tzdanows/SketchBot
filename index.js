@@ -20,6 +20,9 @@ bot.on('message', msg => {
       if (args[0].toUpperCase() == "CLEAR"){
         clear(msg);
       }
+      else if(args[0].toUpperCase() == "HELP"){
+        help(msg);
+      }
       else{
         draw(args[0], args[1], msg); 
       } 
@@ -106,6 +109,10 @@ function checkArgs(args, msg){
     return false;
   }
   if (args[0].toUpperCase() == "CLEAR" && args.length == 1){
+    return true;
+  }
+
+  if (args[0].toUpperCase() == "HELP" && args.length == 1){
     return true;
   }
 
