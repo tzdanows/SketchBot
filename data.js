@@ -58,6 +58,22 @@ const numDict = {
     29: [581, 600],
     30: [601, 620],
     };
+
+
+    const legendDict = {
+      0: ['One of our developers is Canadian'],
+      1: ['Two of our developers are named Alex'],
+      2: ['One of our developers is a top 10 Lucio Ball player'],
+      3: ['All of our developers are seniors at DePaul University'],
+      4: ['One of our developers is ranked Grand Champion in Rocket League'],
+      5: ['One of our developers owns a first edition Charizard pokemon card'],
+      6: ['One of our developers has visited over 25 different countries'],
+      7: ['One of our developers is fluent in three different languages'],
+      8: ['All of our developers enjoy pho'],
+      9: ['All of our developers are depressed'],
+      10: ['One of our developers is really short'],
+      };
   
+    exports.legendDict = legendDict;  
     exports.letterDict = letterDict;
     exports.numDict = numDict;
