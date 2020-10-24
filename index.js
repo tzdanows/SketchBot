@@ -82,7 +82,7 @@ function help(msg){
         },
         {
           name: "**legend**",
-          value: "> Gives a fun fact about Alexander Canada Mikhail! \n `!sketch legend`"
+          value: "> Gives a fun fact about the developers! \n `!sketch legend`"
         }
       ],
       timestamp: new Date(),
@@ -95,7 +95,6 @@ function help(msg){
   }
 
 function sendMessage(msg){
-  help(msg);
   msg.channel.send({
     files:[
       "resources/template.png"
@@ -111,7 +110,6 @@ function checkArgs(args, msg){
   if (args[0].toUpperCase() == "CLEAR" && args.length == 1){
     return true;
   }
-
   if (args[0].toUpperCase() == "HELP" && args.length == 1){
     return true;
   }
