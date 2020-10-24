@@ -23,6 +23,9 @@ bot.on('message', msg => {
       else if(args[0].toUpperCase() == "HELP"){
         help(msg);
       }
+      else if(args[0].toUpperCase() == "LEGEND"){
+        legend(10,msg);
+      }
       else{
         draw(args[0], args[1], msg); 
       } 
@@ -94,6 +97,20 @@ function help(msg){
   });
   }
 
+function legend(inter,msg){
+  num = getRandomInt(inter);
+  console.log(num);
+  msg.reply(data.legendDict[num][0]);
+}
+
+
+
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+
 function sendMessage(msg){
   msg.channel.send({
     files:[
@@ -111,6 +128,9 @@ function checkArgs(args, msg){
     return true;
   }
   if (args[0].toUpperCase() == "HELP" && args.length == 1){
+    return true;
+  }
+  if (args[0].toUpperCase() == "LEGEND" && args.length == 1){
     return true;
   }
 
