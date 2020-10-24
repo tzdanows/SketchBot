@@ -1,30 +1,25 @@
-# How to Build Your First Discord Bot with Node.js
+# Home
 
-Michiel Mulders shows you how to install and set up a new Discord bot, which is made easier thanks to the API offered by the Discord.js package.
+## Description
 
-Link to article on SitePoint: [https://www.sitepoint.com/discord-bot-node-js/](https://www.sitepoint.com/discord-bot-node-js/)
+Sketch is a ...
 
-## Requirements
-
+## Technology Stack
+- Javascript
 - [Node.js](http://nodejs.org/)
-- [Discord](https://discordapp.com/) account
+- [Discord.js](https://discord.js.org/#/)
 
-## Installation Steps (if applicable)
+## Usage Guidelines
 
-1. Clone repo
-2. Run `npm install`
-3. Add Discord credentials in a `.env` file
-3. Run `node index.js`
-4. Interact with your Discord bot via your web browser
+| Command | Example | Usage |
+| :--- | :--- | :--- |
+| **Sketch \[row, column\]** | !sketch \#(row)(column) | Sets a given pixel region in the canvas to a color or hex value you provide. |
+| **clear \[ ]** | !sketch clear | Clears the currently active canvas |
+| **help \[ ]** | !sketch help | Pulls up an embed with some help and examples to using the bot. |
+| **legend \[ ]** | !sketch legend | Provides a fun fact about the developers of the bot! |
 
-## License
+## Team members
 
-SitePoint's code archives and code examples are licensed under the MIT license.
-
-Copyright © 2020 SitePoint
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+- [Alex R](https://github.com/arodr187)
+- [Tom Z](https://github.com/Tommot4747)
+- [Alex M](https://github.com/alextkd99)
