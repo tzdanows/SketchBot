@@ -72,8 +72,6 @@ const numDict = {
       msg.reply('The coordinates provided does not follow the proper format. Please try to format it as such: **A10**');
     }
   
-    exports.letterDict = letterDict;
-    exports.numDict = numDict;
     exports.invalidMsg = invalidMsg;
     exports.invalidColor = invalidColor;
     exports.invalidCoord = invalidCoord;

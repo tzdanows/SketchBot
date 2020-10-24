@@ -4,6 +4,7 @@ var Jimp = require('jimp');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 const data = require('./data');
+const exceptions = require('./exceptions');
 
 bot.login(TOKEN);
 
@@ -32,7 +33,7 @@ function draw(index, color, msg){
   Jimp.read('resources/template.png', (err, template) => {
   if (err) throw err;
   if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000"){
-    invalidColor(msg);
+    exceptions.invalidColor(msg);
     return;
   }
   for (var x = data.numDict[number][0] ; x < data.numDict[number][1] ; x++){
@@ -68,7 +69,7 @@ function sendMessage(msg){
 
 function checkArgs(args, msg){
   if(args.length < 1 || args.length > 2){
-    invalidMsg(msg)
+    exceptions.invalidMsg(msg)
     return false;
   }
   if (args[0].toUpperCase() == "CLEAR" && args.length == 1){
@@ -82,26 +83,17 @@ function checkArgs(args, msg){
         return true;
     }
     else{
-      invalidCoord(msg)
+      exceptions.invalidCoord(msg)
       return false;
     }
   }
   catch{
-    invalidMsg(msg)
+    exceptions.invalidMsg(msg)
     return false;
   }
 }
 
-function invalidMsg(msg){
-  msg.reply('Your input was formatted incorrectly, please try to format it as such: **!sketch {coordinate} {color}** or **!sketch clear**.');
-  msg.channel.send('Type **!sketch help** for more info!');
-}
 
-function invalidColor(msg){
-  msg.reply('The color provided does not follow the proper format. Please try to format it as such: **blue** or **#0000FF**.');
-}
 
-function invalidCoord(msg){
-  msg.reply('The coordinates provided does not follow the proper format. Please try to format it as such: **A10**');
-}
+
 
