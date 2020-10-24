@@ -59,7 +59,40 @@ function clear (msg){
   }); 
 }
 
+function help(msg){
+    msg.channel.send({embed: {
+      color: 24248, //14942251,
+      title: "Documentation Link",
+      author: {
+        name: "Command usage help for sketch!", //bot.user.username,
+        icon_url: bot.user.avatarURL
+      },
+      url: "https://github.com/Tommot4747/DemonHacks2020/tree/master",
+      description: "For any additional help with this, please contact PRIME#0001, Karmajuney#9999, Uncultured#8320 or open a ticket on GitHub.",
+      fields: [{
+          name: "**sketch**",
+          value: "> Lets you sketch a plot on the canvas! \n `!sketch A1` `!sketch G15` `!sketch W30` "
+        },
+        {
+          name: "**clear**",
+          value: "> Clears the canvas! \n `!sketch clear`"
+        },
+        {
+          name: "**legend**",
+          value: "> Gives a fun fact about Alexander Canada Mikhail! \n `!sketch legend`"
+        }
+      ],
+      timestamp: new Date(),
+      footer: {
+        icon_url: msg.author.avatarURL,
+        text: "Team ATA - Demonhacks 2020"
+      }
+    }
+  });
+  }
+
 function sendMessage(msg){
+  help(msg);
   msg.channel.send({
     files:[
       "resources/template.png"
