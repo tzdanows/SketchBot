@@ -15,7 +15,10 @@ bot.on('message', msg => {
   if (msg.content.startsWith('!sketch')) {
     var args = (msg.content.trim().split(/ +/g)).slice(0);
     args.shift();
-    if (args[0].toUpperCase() == "CLEAR"){
+    if(!checkArgs(args)){
+      invalidMsg(msg);
+    }
+    else if (args[0].toUpperCase() == "CLEAR"){
       clear(msg);
     }
     else{
@@ -58,5 +61,31 @@ function sendMessage(msg){
       "resources/template.png"
     ]
   }); 
+}
+
+function checkArgs(args){
+  if(args.length < 1 || args.length > 2){
+    return false;
+  }
+  if (args[0].toUpperCase() == "CLEAR" && args.length == 1){
+    return true;
+  }
+
+  try{
+    number = args[0].substring(1);
+    letter = args[0][0].toUpperCase();
+    if(number in data.numDict && letter in data.letterDict && args.length == 2){
+        return true;
+    }
+  }
+  catch{
+    return false;
+  }
+
+  return false;
+}
+
+function invalidMsg(msg){
+  msg.reply('Your input was formatted incorrectly, please try to format it as such: !sketch A10 or !sketch clear');
 }
 
