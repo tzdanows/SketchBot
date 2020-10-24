@@ -3,8 +3,18 @@ const Discord = require('discord.js');
 var Jimp = require('jimp');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
+const DATABASE = process.env.DATABASE;
 const data = require('./data');
 const exceptions = require('./exceptions');
+var admin = require("firebase-admin");
+var serviceAccount = require("./serviceKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: DATABASE
+});
+
+const db = admin.firestore();
 
 bot.login(TOKEN);
 
@@ -34,35 +44,60 @@ bot.on('message', msg => {
 });
 
 function draw(index, color, msg){
+
   const number = index.substring(1);
   const letter = index[0].toUpperCase();
-  Jimp.read('resources/template.png', (err, template) => {
-  if (err) throw err;
-  if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000"){
-    exceptions.invalidColor(msg);
-    return;
-  }
-  for (var x = data.numDict[number][0] ; x < data.numDict[number][1] ; x++){
-    for (var y = data.letterDict[letter][0] ; y < data.letterDict[letter][1] ; y++){
-      template.setPixelColor(Jimp.cssColorToHex(color), x, y);
-      }
+
+  getImageName(msg).then(name => {
+    if (name == false){
+      init(index, color, msg, name);
+      return;
     }
-    template.writeAsync('./resources/template.png', sendMessage(msg));
-  });
+    else{ 
+      Jimp.read('resources/' + name, (err, template) => {
+        if (err) throw err;
+        if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000"){
+          exceptions.invalidColor(msg);
+          return;
+        }
+        for (var x = data.numDict[number][0] ; x < data.numDict[number][1] ; x++){
+          for (var y = data.letterDict[letter][0] ; y < data.letterDict[letter][1] ; y++){
+            template.setPixelColor(Jimp.cssColorToHex(color), x, y);
+            }
+          }
+          template.writeAsync('./resources/' + name, sendMessage(msg, name));
+          writeDb(msg);
+        });
+    }
+  }
+  );
 }
 
 function clear (msg){
-  Jimp.read('resources/template.png', (err, template) => {
-    if (err) throw err;
-    for (var x = 21 ; x <= 620 ; x ++){
-      for (var y = 21 ; y <= 500 ; y ++){
-        if (x % 20 != 0 && y %20 != 0){
-        template.setPixelColor(Jimp.cssColorToHex('white'), x, y);
-        }
-      }
+  getImageName(msg).then(name => {
+    if (name == false){
+      msg.reply("Please sketch a bit before clearing!");
+      return;
     }
-    template.writeAsync('./resources/template.png', sendMessage(msg)); 
-  }); 
+
+    else{ 
+      Jimp.read('resources/' + name, (err, template) => {
+        if (err) throw err;
+        for (var x = 21 ; x <= 620 ; x ++){
+          for (var y = 21 ; y <= 500 ; y ++){
+            if (x % 20 != 0 && y %20 != 0){
+            template.setPixelColor(Jimp.cssColorToHex('white'), x, y);
+            }
+          }
+        }
+        template.writeAsync('./resources/' + name, sendMessage(msg, name)); 
+        writeDb(msg);
+        
+      });
+      
+    }
+  })
+ 
 }
 
 function help(msg){
@@ -99,24 +134,54 @@ function help(msg){
 
 function legend(inter,msg){
   num = getRandomInt(inter);
-  console.log(num);
   msg.reply(data.legendDict[num][0]);
 }
 
 
-
+function init(index, color, msg, name){
+  Jimp.read('resources/default.png', (err, template) => {
+    if (err) throw err;
+    const name = msg.guild.id + ".png";
+    template.writeAsync('./resources/' + name, draw(index, color, msg)); 
+    writeDb(msg);
+  });
+}
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-
-function sendMessage(msg){
+function sendMessage(msg, name){
   msg.channel.send({
     files:[
-      "resources/template.png"
+      "resources/" + name
     ]
   }); 
+}
+
+async function getImageName(msg){
+ 
+    const info = db.collection('serverData').doc(msg.guild.id)
+    const doc = await info.get();
+    if (!doc.exists){ 
+      return false;
+    }
+    else{
+      return(doc._fieldsProto.imageHash.stringValue + ".png");
+
+  }
+
+}
+
+function writeDb(msg){
+
+  const hashData = {
+    imageHash: msg.guild.id
+  };
+
+
+  db.collection('serverData').doc(msg.guild.id).set(hashData);
+
 }
 
 function checkArgs(args, msg){
