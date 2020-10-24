@@ -15,14 +15,13 @@ bot.on('message', msg => {
   if (msg.content.startsWith('!sketch')) {
     var args = (msg.content.trim().split(/ +/g)).slice(0);
     args.shift();
-    if(!checkArgs(args)){
-      invalidMsg(msg);
-    }
-    else if (args[0].toUpperCase() == "CLEAR"){
-      clear(msg);
-    }
-    else{
-      draw(args[0], args[1], msg);  
+    if(checkArgs(args, msg)){
+      if (args[0].toUpperCase() == "CLEAR"){
+        clear(msg);
+      }
+      else{
+        draw(args[0], args[1], msg); 
+      } 
     }
   } 
 });
@@ -32,6 +31,10 @@ function draw(index, color, msg){
   const letter = index[0].toUpperCase();
   Jimp.read('resources/template.png', (err, template) => {
   if (err) throw err;
+  if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000"){
+    invalidColor(msg);
+    return;
+  }
   for (var x = data.numDict[number][0] ; x < data.numDict[number][1] ; x++){
     for (var y = data.letterDict[letter][0] ; y < data.letterDict[letter][1] ; y++){
       template.setPixelColor(Jimp.cssColorToHex(color), x, y);
@@ -63,8 +66,9 @@ function sendMessage(msg){
   }); 
 }
 
-function checkArgs(args){
+function checkArgs(args, msg){
   if(args.length < 1 || args.length > 2){
+    invalidMsg(msg)
     return false;
   }
   if (args[0].toUpperCase() == "CLEAR" && args.length == 1){
@@ -77,15 +81,27 @@ function checkArgs(args){
     if(number in data.numDict && letter in data.letterDict && args.length == 2){
         return true;
     }
+    else{
+      invalidCoord(msg)
+      return false;
+    }
   }
   catch{
+    invalidMsg(msg)
     return false;
   }
-
-  return false;
 }
 
 function invalidMsg(msg){
-  msg.reply('Your input was formatted incorrectly, please try to format it as such: !sketch A10 or !sketch clear');
+  msg.reply('Your input was formatted incorrectly, please try to format it as such: **!sketch {coordinate} {color}** or **!sketch clear**.');
+  msg.channel.send('Type **!sketch help** for more info!');
+}
+
+function invalidColor(msg){
+  msg.reply('The color provided does not follow the proper format. Please try to format it as such: **blue** or **#0000FF**.');
+}
+
+function invalidCoord(msg){
+  msg.reply('The coordinates provided does not follow the proper format. Please try to format it as such: **A10**');
 }
 
