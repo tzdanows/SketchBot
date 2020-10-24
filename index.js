@@ -66,7 +66,6 @@ function draw(index, color, msg){
             }
           }
           template.writeAsync('./resources/' + name, sendMessage(msg, name));
-          writeDb(msg);
         });
     }
   }
@@ -91,7 +90,6 @@ function clear (msg){
           }
         }
         template.writeAsync('./resources/' + name, sendMessage(msg, name)); 
-        writeDb(msg);
         
       });
       
