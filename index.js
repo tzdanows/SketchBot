@@ -18,7 +18,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-
 //Initialize Discord Bot
 bot.login(TOKEN);
 
