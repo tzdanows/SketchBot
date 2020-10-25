@@ -143,6 +143,11 @@ function legend(inter,msg){
   msg.reply(data.legendDict[num][0]);
 }
 
+function pallete(msg){
+  var randColor = Math.floor(Math.random()*16777215).toString(16);
+  msg.reply(randColor);
+}
+
 
 function init(index, color, msg, name){
   Jimp.read('resources/default.png', (err, template) => {
