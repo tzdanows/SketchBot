@@ -38,29 +38,34 @@ bot.on('message', msg => {
   if (msg.content.startsWith('!sketch')) {
       var args = (msg.content.trim().split(/ +/g)).slice(0);
       args.shift();
-
       if (checkArgs(args, msg)) {
-          if (args[0].toUpperCase() == "CLEAR") {
+          if (args.length == 0){
+              showSketch(msg);
+          } else if (args[0].toUpperCase() == "CLEAR") {
               clear(msg);
           } else if (args[0].toUpperCase() == "HELP") {
               help(msg);
           } else if (args[0].toUpperCase() == "LEGEND") {
               legend(10, msg);
+<<<<<<< HEAD
           } else if (args[0].toUpperCase() == "FILLCANVAS") {
               fillCanvas(msg);
           } else if (args[0].toUpperCase() == "URL") {
 
+=======
+          } else if (args[0].toUpperCase() == "IMAGE") {
+            var url;
+            msg.attachments.forEach(attachment => {
+                url = attachment.url;
+              });
+              if (args.length == 1) args.push(url);
+>>>>>>> 5c84dfcf7a1ab76fb9a695f185aef8211f4c8025
               Jimp.read(args[1]).then(image => {
                       image.resize(30, 24);
                       image.write('temp.jpg', processImage(image, msg));
-                      fs.unlink('./temp.jpg', (err => {
-                          if (err)
-                              console.log(err);
-                      }));
                   })
                   .catch(err => {
-                      console.log(err);
-                      msg.reply("The URL entered does not contain a valid image!");
+                      msg.reply("The FILE/URL provided does not contain a valid image!");
                   });
           } else {
               draw(args[0], args[1], msg);
@@ -125,7 +130,7 @@ function clear(msg) {
             });
 
         }
-    })
+    });
 }
 
 function help(msg) {
@@ -191,6 +196,12 @@ function processImage(image, msg) {
                 }
                 template.writeAsync('./resources/' + name, sendMessage(msg, name));
             });
+          if (fs.existsSync('./temp.jpg')){
+            fs.unlink('./temp.jpg', (err => {
+              if (err)
+                  console.log(err);
+            }));
+          } 
         }
     });
 
@@ -203,9 +214,13 @@ function legend(inter, msg) {
 
 // ARGUMENT CHECKING
 function checkArgs(args, msg) {
-    if (args.length < 1 || args.length > 2) {
+    if (args.length > 2) {
         exceptions.invalidMsg(msg)
         return false;
+    }
+
+    if (args.length == 0){
+        return true;
     }
     if (args[0].toUpperCase() == "CLEAR" && args.length == 1) {
         return true;
@@ -220,7 +235,7 @@ function checkArgs(args, msg) {
         return true;
     }
 
-    if (args[0].toUpperCase() == "URL" && args.length == 2) {
+    if (args[0].toUpperCase() == "IMAGE" && args.length <= 2) {
       return true;
   }
 
@@ -234,6 +249,7 @@ function checkArgs(args, msg) {
             return false;
         }
     } catch {
+        
         exceptions.invalidMsg(msg)
         return false;
     }
@@ -291,6 +307,17 @@ function randomColor(){
   return randColor;
 }
 console.log(randomColor());
+
+function showSketch(msg){
+    getImageName(msg).then(name => {
+        if (name == false) {
+            msg.reply("Please sketch a bit first! Run **!sketch help** for help.");
+            return;
+        } else {
+            sendMessage(msg, name);
+        }
+    });
+}
 
 // CLOUD FIREBASE METHODS
 function init(index, color, msg) {
