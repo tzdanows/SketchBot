@@ -15,6 +15,7 @@ Sketch is a discord bot that hosts a collaborative canvas unique to each discord
 
 | Commands and Parameters | Examples of usage | Description |
 | :--- | :--- | --- |
+| **create** | !sketch create | Creates a new sketch for a discord server |
 | **Sketch** | !sketch | Shows the current canvas of the discord server. |
 | **Sketch \[row, column\]** | !sketch F23 {color} | Sets a given cell in the canvas to a color/hex value you provide. |
 | **Sketch \[row, column\]** | !sketch A15 random | Sets a given cell in the canvas to a color/hex value you provide. |
