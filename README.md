@@ -28,6 +28,6 @@ Sketch is a discord bot that hosts a collaborative canvas unique to each discord
 
 ## Team members
 
-- [Alex R](https://github.com/arodr187)
+- [Alex R](https://github.com/arod0719)
 - [Tom Z](https://github.com/Tommot4747)
 - [Alex M](https://github.com/alextkd99)
