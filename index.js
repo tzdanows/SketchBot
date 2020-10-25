@@ -53,7 +53,6 @@ bot.on('message', msg => {
                       image.write('temp.jpg', processImage(image, msg));
                   })
                   .catch(err => {
-                      console.log(err);
                       msg.reply("The URL entered does not contain a valid image!");
                   });
           } else {
