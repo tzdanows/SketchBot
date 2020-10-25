@@ -27,7 +27,7 @@ bot.on('ready', () => {
     bot.user.setPresence({
         game: {
             name: '!sketch help',
-            type: "Streaming🎨",
+            type: "Streaming",
             url: "https://www.twitch.tv/bobross"
         }
     });
@@ -316,7 +316,6 @@ function fillCanvas(msg){
             }
             yblockcounter = 0;
             blocksize++;
-            console.log(cells);
         }
         template.writeAsync('./resources/' + name, sendMessage(msg, name));
     });
