@@ -91,12 +91,12 @@ function draw(index, color, msg) {
         } else {
             Jimp.read('resources/' + name, (err, template) => {
                 if (err) throw err;
-                if (color.toUpperCase() == "RANDOM"){
-                    color = randomColor();
+                if (color.toUpperCase() == "RANDOM") {	
+                    color = randomColor();	                
                 }
                 else if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
-                        exceptions.invalidColor(msg);
-                        return;
+                    exceptions.invalidColor(msg);
+                    return;
                 }
                 for (var x = data.numDict[number][0]; x < data.numDict[number][1]; x++) {
                     for (var y = data.letterDict[letter][0]; y < data.letterDict[letter][1]; y++) {
@@ -151,19 +151,36 @@ function help(msg) {
             },
             url: "https://github.com/Tommot4747/DemonHacks2020/tree/master",
             description: "For any additional help with this, please contact PRIME#0001, Karmajuney#9999, Uncultured#8320 or open a ticket on GitHub.",
-            fields: [{
+            fields: [
+                {
                     name: "**sketch**",
-                    value: "> Lets you sketch a plot on the canvas! \n `!sketch A1` `!sketch G15` `!sketch W30` "
+                    value: "> Shows the current canvas. \n `!sketch` "
                 },
                 {
-                    name: "**clear**",
+                    name: "**sketch [row][col] {color}**",
+                    value: "> Sets a given cell in the canvas to a color, hex, or random value you provide. \n `!sketch A1 Red` `!sketch G15 0F0F0F` `!sketch W30 Random` "
+                },
+                  {
+                    name: "**image [url]**",
+                    value: "> Resizes a given image via URL to the canvas size and shifts each canvas cell to the most applicable color. \n `!sketch {url}` `!sketch https://i.imgur.com/...` "
+                  },
+                  {
+                    name: "**image [upload]**",
+                    value: "> Resizes a given image via discord upload to the canvas size and shifts each canvas cell to the most applicable color. \n `!sketch {image file upload}` `!sketch {upload a file here}` "
+                },
+                  {
+                    name: "**fill {color}**",
+                    value: "> Fills each cell of the canvas with a given color or fills each cell with a random hex color. \n `!sketch fill red` "
+                },
+                {
+                    name: "**clear []**",
                     value: "> Clears the canvas! \n `!sketch clear`"
                 },
                 {
-                    name: "**legend**",
+                    name: "**legend []**",
                     value: "> Gives a fun fact about the developers! \n `!sketch legend`"
-                }
-            ],
+                },
+              ],
             timestamp: new Date(),
             footer: {
                 icon_url: msg.author.avatarURL,
@@ -241,7 +258,6 @@ function checkArgs(args, msg) {
     if (args[0].toUpperCase() == "LEGEND" && args.length == 1) {
         return true;
     }
-
     if (args[0].toUpperCase() == "IMAGE" && args.length <= 2) {
       return true;
   }
