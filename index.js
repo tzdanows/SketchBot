@@ -24,6 +24,14 @@ bot.login(TOKEN);
 
 bot.on('ready', () => {
   console.info(`Logged in as ${bot.user.tag}!`);
+    bot.user.setStatus('available')
+    bot.user.setPresence({
+        game: {
+            name: '!sketch help',
+            type: "Streaming",
+            url: "https://www.twitch.tv/bobross"
+        }
+    });
 });
 
 bot.on('message', msg => {
@@ -116,7 +124,6 @@ function clear(msg) {
 
         }
     })
-
 }
 
 function help(msg) {
@@ -230,6 +237,11 @@ function checkArgs(args, msg) {
 // Helper methods
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+function pallete(msg){
+  var randColor = Math.floor(Math.random()*16777215).toString(16);
+  msg.reply(randColor);
 }
 
 // CLOUD FIREBASE METHODS
