@@ -90,7 +90,10 @@ function draw(index, color, msg) {
         } else {
             Jimp.read('resources/' + name, (err, template) => {
                 if (err) throw err;
-                if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
+                if (color.toUpperCase() == "RANDOM") {	
+                    color = randomColor();	                
+                }
+                else if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
                     exceptions.invalidColor(msg);
                     return;
                 }
@@ -246,7 +249,6 @@ function checkArgs(args, msg) {
     if (args[0].toUpperCase() == "LEGEND" && args.length == 1) {
         return true;
     }
-
     if (args[0].toUpperCase() == "IMAGE" && args.length <= 2) {
       return true;
   }
@@ -318,7 +320,6 @@ function randomColor(){
   var randColor = Math.floor(Math.random()*16777215).toString(16);
   return randColor;
 }
-console.log(randomColor());
 
 function showSketch(msg){
     getImageName(msg).then(name => {
