@@ -39,7 +39,9 @@ bot.on('message', msg => {
       var args = (msg.content.trim().split(/ +/g)).slice(0);
       args.shift();
       if (checkArgs(args, msg)) {
-          if (args[0].toUpperCase() == "CLEAR") {
+          if (args.length == 0){
+              showSketch(msg);
+          } else if (args[0].toUpperCase() == "CLEAR") {
               clear(msg);
           } else if (args[0].toUpperCase() == "HELP") {
               help(msg);
@@ -121,7 +123,7 @@ function clear(msg) {
             });
 
         }
-    })
+    });
 }
 
 function help(msg) {
@@ -209,6 +211,10 @@ function checkArgs(args, msg) {
         exceptions.invalidMsg(msg)
         return false;
     }
+
+    if (args.length == 0){
+        return true;
+    }
     if (args[0].toUpperCase() == "CLEAR" && args.length == 1) {
         return true;
     }
@@ -247,6 +253,17 @@ function getRandomInt(max) {
 function pallete(msg){
   var randColor = Math.floor(Math.random()*16777215).toString(16);
   msg.reply(randColor);
+}
+
+function showSketch(msg){
+    getImageName(msg).then(name => {
+        if (name == false) {
+            msg.reply("Please sketch a bit first! Run **!sketch help** for help.");
+            return;
+        } else {
+            sendMessage(msg, name);
+        }
+    });
 }
 
 // CLOUD FIREBASE METHODS
