@@ -28,7 +28,7 @@ bot.on('ready', () => {
     bot.user.setPresence({
         game: {
             name: '!sketch help',
-            type: "Streaming",
+            type: "Streaming🎨",
             url: "https://www.twitch.tv/bobross"
         }
     });
@@ -46,6 +46,8 @@ bot.on('message', msg => {
               help(msg);
           } else if (args[0].toUpperCase() == "LEGEND") {
               legend(10, msg);
+          } else if (args[0].toUpperCase() == "FILLCANVAS") {
+              fillCanvas(msg);
           } else if (args[0].toUpperCase() == "URL") {
 
               Jimp.read(args[1]).then(image => {
@@ -208,6 +210,9 @@ function checkArgs(args, msg) {
     if (args[0].toUpperCase() == "CLEAR" && args.length == 1) {
         return true;
     }
+    if (args[0].toUpperCase() == "FILLCANVAS" && args.length == 1) {
+      return true;
+    }
     if (args[0].toUpperCase() == "HELP" && args.length == 1) {
         return true;
     }
@@ -239,10 +244,53 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-function pallete(msg){
-  var randColor = Math.floor(Math.random()*16777215).toString(16);
-  msg.reply(randColor);
+function fillCanvas(msg){
+  getImageName(msg).then(name => {
+    if (name == true) {
+        msg.reply("Can only when the canvas is empty! Try !sketch clear()");
+        return;
+    } else {
+      Jimp.read('resources/' + name, (err, template) => {
+        if (err) throw err;
+        var xblockcounter = 1;
+        var yblockcounter = 1;
+        var blocksize = 1;
+        var cells = Array(24);
+        var color = randomColor();
+        color[1] = randomColor();
+        for (var x = 21; x <= 620; x++) {
+            for (var y = 21; y <= 500; y++) {
+                if (x % 20 != 0 && y % 20 != 0) {
+                    template.setPixelColor(Jimp.cssColorToHex(cells[yblockcounter]), x, y);
+                    
+                } else {
+                    cells[yblockcounter] = color;
+                    yblockcounter++;
+                    color = randomColor();
+                    if (blocksize > 20) {
+                        xblockcounter++;
+                        cells = Array(24);
+                        color[1] = randomColor();
+                        blocksize = 1;
+                    }
+                }
+            }
+            yblockcounter = 1;
+            blocksize++;
+            color = randomColor();
+        }
+        template.writeAsync('./resources/' + name, sendMessage(msg, name));
+    });
+
+    }
+})
 }
+
+function randomColor(){
+  var randColor = Math.floor(Math.random()*16777215).toString(16);
+  return randColor;
+}
+console.log(randomColor());
 
 // CLOUD FIREBASE METHODS
 function init(index, color, msg) {
