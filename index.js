@@ -38,7 +38,6 @@ bot.on('message', msg => {
   if (msg.content.startsWith('!sketch')) {
       var args = (msg.content.trim().split(/ +/g)).slice(0);
       args.shift();
-
       if (checkArgs(args, msg)) {
           if (args[0].toUpperCase() == "CLEAR") {
               clear(msg);
@@ -46,14 +45,18 @@ bot.on('message', msg => {
               help(msg);
           } else if (args[0].toUpperCase() == "LEGEND") {
               legend(10, msg);
-          } else if (args[0].toUpperCase() == "URL") {
-
+          } else if (args[0].toUpperCase() == "IMAGE") {
+            var url;
+            msg.attachments.forEach(attachment => {
+                url = attachment.url;
+              });
+              if (args.length == 1) args.push(url);
               Jimp.read(args[1]).then(image => {
                       image.resize(30, 24);
                       image.write('temp.jpg', processImage(image, msg));
                   })
                   .catch(err => {
-                      msg.reply("The URL entered does not contain a valid image!");
+                      msg.reply("The FILE/URL provided does not contain a valid image!");
                   });
           } else {
               draw(args[0], args[1], msg);
@@ -202,7 +205,7 @@ function legend(inter, msg) {
 
 // ARGUMENT CHECKING
 function checkArgs(args, msg) {
-    if (args.length < 1 || args.length > 2) {
+    if (args.length > 2) {
         exceptions.invalidMsg(msg)
         return false;
     }
@@ -216,7 +219,7 @@ function checkArgs(args, msg) {
         return true;
     }
 
-    if (args[0].toUpperCase() == "URL" && args.length == 2) {
+    if (args[0].toUpperCase() == "IMAGE" && args.length <= 2) {
       return true;
   }
 
@@ -230,6 +233,7 @@ function checkArgs(args, msg) {
             return false;
         }
     } catch {
+        
         exceptions.invalidMsg(msg)
         return false;
     }
