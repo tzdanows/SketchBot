@@ -50,6 +50,8 @@ bot.on('message', msg => {
               legend(10, msg);
           } else if (args[0].toUpperCase() == "FILLCANVAS") {
               fillCanvas(msg);
+          } else if (args[0].toUpperCase() == "CREATE") {
+              create(msg);
           } else if (args[0].toUpperCase() == "IMAGE") {
             var url;
             msg.attachments.forEach(attachment => {
@@ -86,11 +88,14 @@ function draw(index, color, msg) {
 
     getImageName(msg).then(name => {
         if (name == false) {
-            init(index, color, msg);
+            msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
             return;
         } else {
             Jimp.read('resources/' + name, (err, template) => {
-                if (err) throw err;
+                if (err) {
+                    handleError(msg);
+                    return;
+                }
                 if (color.toUpperCase() == "RANDOM") {	
                     color = randomColor();	                
                 }
@@ -112,7 +117,7 @@ function draw(index, color, msg) {
 function fill(msg,color) {
     getImageName(msg).then(name => {
         if (name == false) {
-            msg.reply("Please sketch a bit before filling/clearing **!sketch help** for more details!");
+            msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
             return;
         } else {
             if(color.toUpperCase() == "RANDOM"){
@@ -124,7 +129,10 @@ function fill(msg,color) {
                 return;
             }
             Jimp.read('resources/' + name, (err, template) => {
-                if (err) throw err;
+                if (err) {
+                    handleError(msg);
+                    return;
+                }
                 for (var x = 21; x <= 620; x++) {
                     for (var y = 21; y <= 500; y++) {
                         if (x % 20 != 0 && y % 20 != 0) {
@@ -152,6 +160,10 @@ function help(msg) {
             url: "https://github.com/Tommot4747/DemonHacks2020/tree/master",
             description: "For any additional help with this, please contact PRIME#0001, Karmajuney#9999, Uncultured#8320 or open a ticket on GitHub.",
             fields: [
+                {
+                    name: "**sketch create**",
+                    value: "> Create a canvas for this server. \n `!sketch create` "
+                },
                 {
                     name: "**sketch**",
                     value: "> Shows the current canvas. \n `!sketch` "
@@ -191,14 +203,16 @@ function help(msg) {
 }
 
 function processImage(image, msg) {
-
     getImageName(msg).then(name => {
         if (name == false) {
-            msg.reply("Please draw BEFORE replacing an image");
+            msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
             return;
         } else {
             Jimp.read('resources/' + name, (err, template) => {
-                if (err) throw err;
+                if (err) {
+                    handleError(msg);
+                    return;
+                }
                 var xblockcounter = 1;
                 var yblockcounter = 1;
                 var blocksize = 1;
@@ -259,8 +273,11 @@ function checkArgs(args, msg) {
         return true;
     }
     if (args[0].toUpperCase() == "IMAGE" && args.length <= 2) {
-      return true;
-  }
+        return true;
+    }
+    if (args[0].toUpperCase() == "CREATE" && args.length == 1) {
+        return true;
+    }
 
     try {
         number = args[0].substring(1);
@@ -285,12 +302,15 @@ function getRandomInt(max) {
 
 function fillCanvas(msg){
   getImageName(msg).then(name => {
-    if (name == true) {
-        msg.reply("Can only fill canvas when the canvas is empty! Try !sketch clear");
+    if (name == false) {
+        msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
         return;
     } else {
       Jimp.read('resources/' + name, (err, template) => {
-        if (err) throw err;
+        if (err) {
+            handleError(msg);
+            return;
+        }
         var xblockcounter = 0;
         var yblockcounter = 0;
         var blocksize = 1;
@@ -332,7 +352,7 @@ function randomColor(){
 function showSketch(msg){
     getImageName(msg).then(name => {
         if (name == false) {
-            msg.reply("Please sketch a bit first! Run **!sketch help** for help.");
+            msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
             return;
         } else {
             sendMessage(msg, name);
@@ -340,14 +360,29 @@ function showSketch(msg){
     });
 }
 
+function handleError(msg){
+    msg.reply("Please create a sketch for this server first! Run **!sketch create** or **sketch help** for more details");
+}
+
 // CLOUD FIREBASE METHODS
-function init(index, color, msg) {
-    Jimp.read('resources/default.png', (err, template) => {
-        if (err) throw err;
-        const name = msg.guild.id + ".png";
-        template.writeAsync('./resources/' + name, draw(index, color, msg));
-        writeDb(msg);
-    });
+function create(msg) {
+    getImageName(msg).then(name => {
+        if (name != false) {
+            msg.reply("A sketch has already been created on this server!");
+            return;
+        } else {
+            Jimp.read('resources/default.png', (err, template) => {
+                if (err) {
+                    handleError(msg);
+                    return;
+                }
+                const name = msg.guild.id + ".png";
+                template.writeAsync('./resources/' + name);
+                writeDb(msg);
+                msg.channel.send("The sketch has been created!");
+            });
+        }
+    })
 }
 
 function writeDb(msg) {
@@ -358,7 +393,6 @@ function writeDb(msg) {
 }
 
 async function getImageName(msg) {
-
     const info = db.collection('serverData').doc(msg.guild.id)
     const doc = await info.get();
     if (!doc.exists) {
