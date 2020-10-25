@@ -51,10 +51,6 @@ bot.on('message', msg => {
               Jimp.read(args[1]).then(image => {
                       image.resize(30, 24);
                       image.write('temp.jpg', processImage(image, msg));
-                      fs.unlink('./temp.jpg', (err => {
-                          if (err)
-                              console.log(err);
-                      }));
                   })
                   .catch(err => {
                       console.log(err);
@@ -189,6 +185,12 @@ function processImage(image, msg) {
                 }
                 template.writeAsync('./resources/' + name, sendMessage(msg, name));
             });
+          if (fs.existsSync('./temp.jpg')){
+            fs.unlink('./temp.jpg', (err => {
+              if (err)
+                  console.log(err);
+            }));
+          } 
         }
     });
 
