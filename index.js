@@ -20,6 +20,14 @@ bot.login(TOKEN);
 
 bot.on('ready', () => {
   console.info(`Logged in as ${bot.user.tag}!`);
+    bot.user.setStatus('available')
+    bot.user.setPresence({
+        game: {
+            name: '!sketch help',
+            type: "Streaming",
+            url: "https://www.twitch.tv/bobross"
+        }
+    });
 });
 
 bot.on('message', msg => {
