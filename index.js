@@ -18,7 +18,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-
 //Initialize Discord Bot
 bot.login(TOKEN);
 
@@ -42,9 +41,11 @@ bot.on('message', msg => {
           if (args.length == 0){
               showSketch(msg);
           } else if (args[0].toUpperCase() == "CLEAR") {
-              clear(msg);
+              fill(msg,'white');
           } else if (args[0].toUpperCase() == "HELP") {
               help(msg);
+          } else if (args[0].toUpperCase() == "FILL") {
+              fill(msg,args[1]);
           } else if (args[0].toUpperCase() == "LEGEND") {
               legend(10, msg);
           } else if (args[0].toUpperCase() == "FILLCANVAS") {
@@ -108,18 +109,26 @@ function draw(index, color, msg) {
     });
 }
 
-function clear(msg) {
+function fill(msg,color) {
     getImageName(msg).then(name => {
         if (name == false) {
-            msg.reply("Please sketch a bit before clearing!");
+            msg.reply("Please sketch a bit before filling/clearning **!sketch help** for more details!");
             return;
         } else {
+            if(color.toUpperCase() == "RANDOM"){
+                fillCanvas(msg);
+                return;
+            }
+            else if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
+                exceptions.invalidColor(msg);
+                return;
+            }
             Jimp.read('resources/' + name, (err, template) => {
                 if (err) throw err;
                 for (var x = 21; x <= 620; x++) {
                     for (var y = 21; y <= 500; y++) {
                         if (x % 20 != 0 && y % 20 != 0) {
-                            template.setPixelColor(Jimp.cssColorToHex('white'), x, y);
+                            template.setPixelColor(Jimp.cssColorToHex(color), x, y);
                         }
                     }
                 }
@@ -223,7 +232,7 @@ function checkArgs(args, msg) {
     if (args[0].toUpperCase() == "CLEAR" && args.length == 1) {
         return true;
     }
-    if (args[0].toUpperCase() == "FILLCANVAS" && args.length == 1) {
+    if (args[0].toUpperCase() == "FILL" && args.length == 2) {
       return true;
     }
     if (args[0].toUpperCase() == "HELP" && args.length == 1) {
@@ -261,37 +270,37 @@ function getRandomInt(max) {
 function fillCanvas(msg){
   getImageName(msg).then(name => {
     if (name == true) {
-        msg.reply("Can only when the canvas is empty! Try !sketch clear()");
+        msg.reply("Can only fill canvas when the canvas is empty! Try !sketch clear");
         return;
     } else {
       Jimp.read('resources/' + name, (err, template) => {
         if (err) throw err;
-        var xblockcounter = 1;
-        var yblockcounter = 1;
+        var xblockcounter = 0;
+        var yblockcounter = 0;
         var blocksize = 1;
         var cells = Array(24);
-        var color = randomColor();
-        color[1] = randomColor();
-        for (var x = 21; x <= 620; x++) {
-            for (var y = 21; y <= 500; y++) {
+        cells[0] = randomColor();
+        for (var x = 20; x <= 620; x++) {
+            for (var y = 20; y <= 500; y++) {
                 if (x % 20 != 0 && y % 20 != 0) {
                     template.setPixelColor(Jimp.cssColorToHex(cells[yblockcounter]), x, y);
                     
                 } else {
-                    cells[yblockcounter] = color;
-                    yblockcounter++;
-                    color = randomColor();
+                    if(cells[yblockcounter] == undefined && yblockcounter < 25){
+                        cells[yblockcounter] = randomColor();
+                    }
+                    yblockcounter++
                     if (blocksize > 20) {
-                        xblockcounter++;
                         cells = Array(24);
-                        color[1] = randomColor();
+                        cells[0] = randomColor();
+                        xblockcounter++;
                         blocksize = 1;
                     }
                 }
             }
-            yblockcounter = 1;
+            yblockcounter = 0;
             blocksize++;
-            color = randomColor();
+            console.log(cells);
         }
         template.writeAsync('./resources/' + name, sendMessage(msg, name));
     });
