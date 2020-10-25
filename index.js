@@ -112,7 +112,7 @@ function draw(index, color, msg) {
 function fill(msg,color) {
     getImageName(msg).then(name => {
         if (name == false) {
-            msg.reply("Please sketch a bit before filling/clearning **!sketch help** for more details!");
+            msg.reply("Please sketch a bit before filling/clearing **!sketch help** for more details!");
             return;
         } else {
             if(color.toUpperCase() == "RANDOM"){
