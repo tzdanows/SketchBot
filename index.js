@@ -47,19 +47,14 @@ bot.on('message', msg => {
               help(msg);
           } else if (args[0].toUpperCase() == "LEGEND") {
               legend(10, msg);
-<<<<<<< HEAD
           } else if (args[0].toUpperCase() == "FILLCANVAS") {
               fillCanvas(msg);
-          } else if (args[0].toUpperCase() == "URL") {
-
-=======
           } else if (args[0].toUpperCase() == "IMAGE") {
             var url;
             msg.attachments.forEach(attachment => {
                 url = attachment.url;
               });
               if (args.length == 1) args.push(url);
->>>>>>> 5c84dfcf7a1ab76fb9a695f185aef8211f4c8025
               Jimp.read(args[1]).then(image => {
                       image.resize(30, 24);
                       image.write('temp.jpg', processImage(image, msg));
@@ -95,9 +90,12 @@ function draw(index, color, msg) {
         } else {
             Jimp.read('resources/' + name, (err, template) => {
                 if (err) throw err;
-                if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
-                    exceptions.invalidColor(msg);
-                    return;
+                if (color.toUpperCase() == "RANDOM"){
+                    color = randomColor();
+                }
+                else if (Jimp.cssColorToHex(color) == 255 && color != "black" && color != "#000000") {
+                        exceptions.invalidColor(msg);
+                        return;
                 }
                 for (var x = data.numDict[number][0]; x < data.numDict[number][1]; x++) {
                     for (var y = data.letterDict[letter][0]; y < data.letterDict[letter][1]; y++) {
@@ -306,7 +304,6 @@ function randomColor(){
   var randColor = Math.floor(Math.random()*16777215).toString(16);
   return randColor;
 }
-console.log(randomColor());
 
 function showSketch(msg){
     getImageName(msg).then(name => {
