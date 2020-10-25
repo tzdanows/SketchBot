@@ -293,7 +293,6 @@ function fillCanvas(msg) {
         }
         template.writeAsync('./resources/' + name, sendMessage(msg, name));
       });
-
     }
   })
 }
