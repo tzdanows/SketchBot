@@ -20,7 +20,7 @@ Sketch is a discord bot that hosts a collaborative canvas unique to each discord
 | **Sketch \[row, column\]** | !sketch A15 random | Sets a given cell in the canvas to a color/hex value you provide. |
 | **image [url]** | !sketch {url} | Resizes a given image via URL to the canvas size and shifts each canvas cell to "the most applicable color". |
 | **image [upload]** | !sketch {image file upload} | Resizes a given image via discord upload to the canvas size and shifts each canvas cell to "the most applicable color". |
-| **fillCanvas \[ ]** | !sketch fillCanvas | Fills each cell of the canvas with a random hex color. |
+| **fill \[color]** | !sketch fill {color} or !sketch fill random | Fills each cell of the canvas with color, hex color, or random hex color. |
 | **clear \[ ]** | !sketch clear | Clears the canvas in the current discord server. |
 | **help \[ ]** | !sketch help | Pulls up an embed with some help and examples for using the bot. |
 | **legend \[ ]** | !sketch legend | Provides a fun fact about the developers of the bot! |
