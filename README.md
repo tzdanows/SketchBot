@@ -1,5 +1,7 @@
 # Home
-Created at [DemonHacks 2020](https://demonhacks.com/)
+Created at [DemonHacks 2020](https://demonhacks.com/) and awarded Best Use of Google Cloud
+[Devpost](https://devpost.com/software/sketchbot)
+
 ## Description
 
 Sketch is a discord bot that hosts a collaborative canvas unique to each discord that was inspired by Reddit's [r/place](https://www.reddit.com/r/place/). The bot aims to cover various artistic aspects that are convenient for people to have fun with over discord. 
