@@ -1,6 +1,6 @@
 # Home
-Created at [DemonHacks 2020](https://demonhacks.com/) and awarded Best Use of Google Cloud
-[Devpost](https://devpost.com/software/sketchbot)
+Created at [DemonHacks 2020](https://demonhacks.com/) and awarded Best Use of Google Cloud  
+Devpost](https://devpost.com/software/sketchbot)
 
 ## Description
 
